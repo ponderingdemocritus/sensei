@@ -1,0 +1,22 @@
+{
+  "name": "dojo-bot",
+  "module": "index.ts",
+  "type": "module",
+  "main": "dist/src/server.js",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "bun-types": "latest"
+  },
+  "dependencies": {
+    "@sapphire/decorators": "^6.0.2",
+    "@sapphire/framework": "^4.6.0",
+    "discord.js": "^14.13.0",
+    "express": "^4.18.2",
+    "langchain": "^0.0.153",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "serve": "node dist/src/index.js"
+  }
+}
