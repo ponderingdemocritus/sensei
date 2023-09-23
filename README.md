@@ -1,4 +1,6 @@
-## ChainyMcChainface
+## Squire V2
+
+Squire is designed to be a template to build bots for the onchain gaming ecosystem.
 
 ```
 bun install
