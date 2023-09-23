@@ -6,4 +6,8 @@ export const client = new SapphireClient({
     loadMessageCommandListeners: true,
 });
 
-client.login(process.env.DISCORD_TOKEN);
+console.log("Logging in.....");
+
+await client.login(process.env.DISCORD_TOKEN);
+
+console.log("Logged in!");

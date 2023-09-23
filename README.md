@@ -1,15 +1,18 @@
-# dojo-bot
+## ChainyMcChainface
 
-To install dependencies:
-
-```bash
+```
 bun install
 ```
 
-To run:
-
-```bash
-bun run index.ts
+### Terminal 1 - Serve the bot
+```
+bun run serve
 ```
 
-This project was created using `bun init` in bun v1.0.1. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+### Terminal 2 - Build and watch
+
+```
+bun run build --watch
+```
+
+Now try running it in your server

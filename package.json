@@ -8,6 +8,7 @@
     "bun-types": "latest"
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^1.0.1",
     "@sapphire/decorators": "^6.0.2",
     "@sapphire/framework": "^4.6.0",
     "discord.js": "^14.13.0",
