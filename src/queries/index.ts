@@ -41,13 +41,15 @@ export const pollGraphQL = () => {
       newAdventurers.forEach((adventurer: any) => {
         console.log("New adventurer:", adventurer);
 
-        client.channels.fetch("1004698995765035021").then((channel) => {
-          if (channel?.isTextBased()) {
-            getPrediction(adventurer.name).then((prediction) => {
-              channel.send(prediction);
-            });
-          }
-        });
+        client.channels
+          .fetch(process.env.DISCORD_SURVIVOR_CHANNEL || "")
+          .then((channel) => {
+            if (channel?.isTextBased()) {
+              getPrediction(adventurer.name).then((prediction) => {
+                channel.send(prediction);
+              });
+            }
+          });
 
         seenAdventurers.add(adventurer.id);
       });

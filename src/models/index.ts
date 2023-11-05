@@ -12,7 +12,7 @@ export const chatModel = new ChatOpenAI({
 });
 
 const prompt = PromptTemplate.fromTemplate(
-  "This is the name of an Adventurer who is about to travel into the game called Loot Surivor, i want you to take the name and create a 1 sentence backstory and is funny, keep it short and commical, speak like gandalf. \n {question}"
+  "This is the name of an Adventurer who is about to travel into the game called Loot Surivor, where you fight crazy dangerous beasts, i want you to take the players name and create a 1 sentence backstory, use dark humour, speak like gandalf. Start with capitals saying that they have entered the game, and question their resolve. \n {question}"
 );
 
 const chainA = new LLMChain({ llm: chatModel, prompt });
