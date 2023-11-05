@@ -10,14 +10,17 @@ const seenAdventurers = new Set();
 const graphqlQuery = {
   query: `
     query{
-        adventurers(
-            where: {health: {eq: 0}}
-            limit: 1
-            orderBy: {startBlock: {desc: true}}
-          ) {
-            id
-            name
-          }
+      adventurers(
+        limit: 1
+        where: {health: {eq: 0}}
+        orderBy: {timestamp: {desc: false}}
+      ) {
+        id
+        name
+        xp
+        gold
+        health
+      }
     }
   `,
 };
@@ -45,7 +48,7 @@ export const pollGraphQL = () => {
           .fetch(process.env.DISCORD_SURVIVOR_CHANNEL || "")
           .then((channel) => {
             if (channel?.isTextBased()) {
-              getPrediction(adventurer.name).then((prediction) => {
+              getPrediction(JSON.stringify(adventurer)).then((prediction) => {
                 channel.send(prediction);
               });
             }
