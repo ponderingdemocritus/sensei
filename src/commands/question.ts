@@ -1,5 +1,6 @@
 import { Command } from "@sapphire/framework";
-import { getPrediction, questionStatement } from "../models/index.js";
+import { getPrediction } from "../models/index.js";
+import { questionStatement } from "../models/statements/index.js";
 
 export class Question extends Command {
   public constructor(context: Command.Context, options: Command.Options) {

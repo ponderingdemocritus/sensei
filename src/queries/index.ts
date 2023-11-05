@@ -26,7 +26,6 @@ export const pollGraphQL = ({
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    // body: JSON.stringify(getDeadSurvivors),
     body: JSON.stringify(query),
   })
     .then((response) => response.json())
@@ -38,12 +37,6 @@ export const pollGraphQL = ({
       // Process new adventurers here
       newAdventurers.forEach((adventurer: any) => {
         console.log("New adventurer:", adventurer);
-
-        const getAction = async () => {
-          const death = await getLastActionBeforeDeath(adventurer.id);
-
-          return death;
-        };
 
         client.channels
           .fetch(process.env.DISCORD_SURVIVOR_CHANNEL || "")
@@ -96,7 +89,7 @@ export const getLastActionBeforeDeath = async (id: number) => {
       },
       body: JSON.stringify({
         query: LAST_ACTION_BEFORE_DEATH_QUERY,
-        variables: { id }, // Make sure this is the actual variable expected by your GraphQL schema
+        variables: { id },
       }),
     });
 
