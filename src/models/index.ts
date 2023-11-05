@@ -11,13 +11,20 @@ export const chatModel = new ChatOpenAI({
   openAIApiKey: process.env.OPEN_AI_API_KEY,
 });
 
-const prompt = PromptTemplate.fromTemplate(
-  "This is the an object of an Adventurer who just died in a game called Loot Surivor, where you fight crazy dangerous beasts, i want you to take the players name and create a 1 sentence backstory, use dark humour, speak like gandalf. Roast them for their bad decisions. \n {question}"
-);
+export const deathStatement =
+  "This is the an object of an Adventurer who just died in a game called Loot Surivor, where you fight crazy dangerous beasts, i want you to take the players name and create a 1 sentence backstory, use dark humour, speak like gandalf. Roast them for their bad decisions. \n {question}";
 
-const chainA = new LLMChain({ llm: chatModel, prompt });
+export const bornStatement =
+  "This is the an object of an Adventurer who just joined a game called Loot Surivor, where you fight crazy dangerous beasts, i want you to take the players name and create a 1 sentence backstory, use dark humour, speak like gandalf. Roast them for their bad decisions. \n {question}";
 
-export const getPrediction = async (text: string) => {
+export const questionStatement =
+  "You are gandalf, answer this question: \n {question}";
+
+export const getPrediction = async (statement: string, text: string) => {
+  const prompt = PromptTemplate.fromTemplate(statement);
+
+  const chainA = new LLMChain({ llm: chatModel, prompt });
+
   const call = await chainA.call({ question: text });
   return call.text;
 };
