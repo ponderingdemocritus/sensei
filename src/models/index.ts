@@ -12,12 +12,12 @@ export const chatModel = new ChatOpenAI({
 });
 
 const prompt = PromptTemplate.fromTemplate(
-  "I want you to act like Gandalf from Lord of the rings. I want you to respond and answer like Gandalf using the tone, manner and vocabulary Gandalf would use. Do not write any explanations. Only answer like Gandalf. You must know all of the knowledge of Gandalf. \n {question}"
+  "This is the name of an Adventurer who is about to travel into the game called Loot Surivor, i want you to take the name and create a 1 sentence backstory and is funny, keep it short and commical, speak like gandalf. \n {question}"
 );
 
 const chainA = new LLMChain({ llm: chatModel, prompt });
 
 export const getPrediction = async (text: string) => {
   const call = await chainA.call({ question: text });
-  return call.text
-}
+  return call.text;
+};
