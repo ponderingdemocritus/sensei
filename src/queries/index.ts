@@ -1,7 +1,11 @@
 import { client } from "../index.js";
 import { getPrediction } from "../models/index.js";
 import { embed } from "../models/loaders/utils.js";
-import { Query, getDeadSurvivors } from "./query.js";
+import {
+  LAST_ACTION_BEFORE_DEATH_QUERY,
+  Query,
+  getDeadSurvivors,
+} from "./query.js";
 
 export const GRAPHQL_ENDPOINT =
   "https://survivor-mainnet-indexer.realms.world/graphql";
@@ -35,30 +39,38 @@ export const pollGraphQL = ({
       newAdventurers.forEach((adventurer: any) => {
         console.log("New adventurer:", adventurer);
 
+        const getAction = async () => {
+          const death = await getLastActionBeforeDeath(adventurer.id);
+
+          return death;
+        };
+
         client.channels
           .fetch(process.env.DISCORD_SURVIVOR_CHANNEL || "")
           .then((channel) => {
             if (channel?.isTextBased()) {
-              getPrediction(llmStatement, JSON.stringify(adventurer)).then(
-                (prediction) => {
-                  const exampleEmbed = {
-                    color: 0x00ff3c,
-                    title:
-                      adventurer.name +
-                      (adventurer.health === 0
-                        ? " has died"
-                        : " has entered the arena"),
-                    url: "https://survivor.realms.world/",
-                    description: prediction,
-                    timestamp: new Date().toISOString(),
-                    footer: {
-                      text: "dedicated to the fallen",
-                    },
-                  };
+              getLastActionBeforeDeath(adventurer.id).then((death) => {
+                getPrediction(llmStatement, JSON.stringify(death)).then(
+                  (prediction) => {
+                    const exampleEmbed = {
+                      color: 0x00ff3c,
+                      title:
+                        adventurer.name +
+                        (adventurer.health === 0
+                          ? " has died"
+                          : " has entered the arena"),
+                      url: "https://survivor.realms.world/",
+                      description: prediction,
+                      timestamp: new Date().toISOString(),
+                      footer: {
+                        text: "dedicated to the fallen",
+                      },
+                    };
 
-                  channel.send({ embeds: [exampleEmbed] });
-                }
-              );
+                    channel.send({ embeds: [exampleEmbed] });
+                  }
+                );
+              });
             }
           });
 
@@ -73,4 +85,37 @@ export const pollGraphQL = ({
       console.error("Error fetching data:", error);
       // Handle error here
     });
+};
+
+export const getLastActionBeforeDeath = async (id: number) => {
+  try {
+    const response = await fetch(GRAPHQL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: LAST_ACTION_BEFORE_DEATH_QUERY,
+        variables: { id }, // Make sure this is the actual variable expected by your GraphQL schema
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Network error: ${response.status} - ${response.statusText}`
+      );
+    }
+
+    const result = await response.json();
+
+    if (result.errors) {
+      console.error("GraphQL Errors:", result.errors);
+      throw new Error("Failed to fetch GraphQL data.");
+    }
+
+    return result.data;
+  } catch (error) {
+    console.error("Fetching error:", error);
+    throw error;
+  }
 };

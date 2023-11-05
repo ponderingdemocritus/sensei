@@ -22,8 +22,8 @@ console.log(`Polling GraphQL endpoint every ${POLL_INTERVAL} ms`);
 const deathPolling = () =>
   pollGraphQL({ llmStatement: deathStatement, query: getDeadSurvivors });
 
-const lifePolling = () =>
-  pollGraphQL({ llmStatement: bornStatement, query: getBornSurvivors });
+// const lifePolling = () =>
+//   pollGraphQL({ llmStatement: bornStatement, query: getBornSurvivors });
 
 setInterval(deathPolling, POLL_INTERVAL);
-setInterval(lifePolling, POLL_INTERVAL);
+// setInterval(lifePolling, POLL_INTERVAL);
