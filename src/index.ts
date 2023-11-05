@@ -1,7 +1,7 @@
 import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
 import { POLL_INTERVAL, pollGraphQL } from "./queries/index.js";
-import { deathStatement } from "./models/index.js";
+import { bornStatement, deathStatement } from "./models/index.js";
 import { getBornSurvivors, getDeadSurvivors } from "./queries/query.js";
 
 export const client = new SapphireClient({
@@ -23,7 +23,7 @@ const deathPolling = () =>
   pollGraphQL({ llmStatement: deathStatement, query: getDeadSurvivors });
 
 const lifePolling = () =>
-  pollGraphQL({ llmStatement: deathStatement, query: getBornSurvivors });
+  pollGraphQL({ llmStatement: bornStatement, query: getBornSurvivors });
 
 setInterval(deathPolling, POLL_INTERVAL);
 setInterval(lifePolling, POLL_INTERVAL);
