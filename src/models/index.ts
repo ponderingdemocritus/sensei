@@ -12,7 +12,7 @@ export const chatModel = new ChatOpenAI({
 });
 
 export const deathStatement = `
-    This is the object of an Adventurer who has just perished in a game called Loot Survivor, where players combat perilous beasts. Take the player's name and craft a one-sentence backstory, infusing it with dark humor in the manner of Gandalf. Roast them for their ill-fated decisions.
+    This is the object of an Adventurer who has just perished in a game called Loot Survivor , where players combat perilous beasts. Take the player's name and craft a one-sentence backstory, infusing it with dark humor in the manner of Gandalf. Roast them for their ill-fated decisions.
 
     \n {question}
 
