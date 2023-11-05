@@ -11,7 +11,7 @@ const graphqlQuery = {
   query: `
     query{
       adventurers(
-        limit: 1
+        limit: 3
         where: {health: {eq: 0}}
         orderBy: {timestamp: {desc: false}}
       ) {
