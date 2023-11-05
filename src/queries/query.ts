@@ -86,3 +86,13 @@ export const LAST_ACTION_BEFORE_DEATH_QUERY = `
     }
   }
 `;
+
+export const ALIVE_ADVENTURERS = {
+  query: `
+    query {
+      adventurers(limit:300, where: {health: {gt: 0}}) {
+        id
+      }
+    }
+  `,
+};

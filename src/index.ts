@@ -6,6 +6,7 @@ import {
   deathStatement,
   getRandomStatement,
 } from "./models/statements/index.js";
+import { getAlive } from "./queries/getAliveSurvivors.js";
 
 export const client = new SapphireClient({
   intents: [
@@ -25,8 +26,6 @@ console.log(`Polling GraphQL endpoint every ${POLL_INTERVAL} ms`);
 const deathPolling = () =>
   pollGraphQL({ llmStatement: getRandomStatement(), query: getDeadSurvivors });
 
-// const lifePolling = () =>
-//   pollGraphQL({ llmStatement: bornStatement, query: getBornSurvivors });
-
 setInterval(deathPolling, POLL_INTERVAL);
-// setInterval(lifePolling, POLL_INTERVAL);
+
+setInterval(getAlive, POLL_INTERVAL * 3);

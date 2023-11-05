@@ -1,11 +1,7 @@
 import { client } from "../index.js";
 import { getPrediction } from "../models/index.js";
 import { embed } from "../models/loaders/utils.js";
-import {
-  LAST_ACTION_BEFORE_DEATH_QUERY,
-  Query,
-  getDeadSurvivors,
-} from "./query.js";
+import { LAST_ACTION_BEFORE_DEATH_QUERY, Query } from "./query.js";
 
 export const GRAPHQL_ENDPOINT =
   "https://survivor-mainnet-indexer.realms.world/graphql";
