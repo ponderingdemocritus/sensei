@@ -6,7 +6,7 @@ export const getDeadSurvivors = {
   query: `
       query{
         adventurers(
-          limit: 3
+          limit: 2
           where: {health: {eq: 0}}
           orderBy: {timestamp: {desc: true}}
         ) {

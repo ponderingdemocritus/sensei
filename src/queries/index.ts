@@ -1,4 +1,5 @@
 import { client } from "../index.js";
+import { generateImage } from "../models/dalle/index.js";
 import { getPrediction } from "../models/index.js";
 import { embed } from "../models/loaders/utils.js";
 import { LAST_ACTION_BEFORE_DEATH_QUERY, Query } from "./query.js";
@@ -41,22 +42,27 @@ export const pollGraphQL = ({
               getLastActionBeforeDeath(adventurer.id).then((death) => {
                 getPrediction(llmStatement, JSON.stringify(death)).then(
                   (prediction) => {
-                    const exampleEmbed = {
-                      color: 0x00ff3c,
-                      title:
-                        adventurer.name +
-                        (adventurer.health === 0
-                          ? " has died"
-                          : " has entered the arena"),
-                      url: "https://survivor.realms.world/",
-                      description: prediction,
-                      timestamp: new Date().toISOString(),
-                      footer: {
-                        text: "dedicated to the fallen",
-                      },
-                    };
+                    generateImage(prediction).then((image: any) => {
+                      const exampleEmbed = {
+                        color: 0x00ff3c,
+                        title:
+                          adventurer.name +
+                          (adventurer.health === 0
+                            ? " has died"
+                            : " has entered the arena"),
+                        url: "https://survivor.realms.world/",
+                        description: prediction,
+                        timestamp: new Date().toISOString(),
+                        image: {
+                          url: image[0].url,
+                        },
+                        footer: {
+                          text: "dedicated to the fallen",
+                        },
+                      };
 
-                    channel.send({ embeds: [exampleEmbed] });
+                      channel.send({ embeds: [exampleEmbed] });
+                    });
                   }
                 );
               });
