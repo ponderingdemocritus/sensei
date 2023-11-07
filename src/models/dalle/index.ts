@@ -9,7 +9,7 @@ export async function generateImage(prompt: string, retries = 1) {
         const image = await openai.images.generate({
           model: "dall-e-3",
           prompt:
-            "make a voxel art magic matrix image from this story, only use the beasts, obstacles names, put it in a dark fantasy setting, avoid copyright, avoid typing text on the image : " +
+            "make a voxel art magic matrix image from this story, only use the beasts, obstacles names, put it in a dark fantasy setting, avoid copyright, avoid typing text on the image, put the level in a big number the top right corner: " +
             prompt,
         });
         console.log(image.data);
