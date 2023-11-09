@@ -9,6 +9,7 @@ export const llm = new OpenAI({
 
 export const chatModel = new ChatOpenAI({
   openAIApiKey: process.env.OPEN_AI_API_KEY,
+  modelName: "gpt-4",
 });
 
 export const getPrediction = async (statement: string, text: string) => {

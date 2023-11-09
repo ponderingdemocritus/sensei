@@ -1,6 +1,6 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
+export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
 
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {
