@@ -115,7 +115,7 @@ export const getTopAdventurers = () => {
           console.log("New top adventurer:", adventurer.name);
 
           client.channels
-            .fetch(process.env.DISCORD_SURVIVOR_CHANNEL || "")
+            .fetch(process.env.DISCORD_SURVIVOR_HIGH_SCORE || "")
             .then((channel) => {
               if (channel?.isTextBased()) {
                 const exampleEmbed = {
