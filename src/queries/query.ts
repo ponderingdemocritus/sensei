@@ -96,3 +96,18 @@ export const ALIVE_ADVENTURERS = {
     }
   `,
 };
+
+export const TOP_ADVENTURERS = {
+  query: `
+    query {
+      adventurers(
+        limit: 3
+        orderBy: {xp: {desc: true}}
+      ) {
+        xp
+        id
+        name
+      }
+    }
+  `,
+};

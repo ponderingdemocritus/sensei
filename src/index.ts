@@ -6,7 +6,7 @@ import {
   deathStatement,
   getRandomStatement,
 } from "./models/statements/index.js";
-import { getAlive } from "./queries/getAliveSurvivors.js";
+import { getAlive, getTopAdventurers } from "./queries/getAliveSurvivors.js";
 
 export const client = new SapphireClient({
   intents: [
@@ -29,3 +29,5 @@ const deathPolling = () =>
 setInterval(deathPolling, POLL_INTERVAL);
 
 setInterval(getAlive, POLL_INTERVAL * 3);
+
+setInterval(getTopAdventurers, POLL_INTERVAL * 3);
