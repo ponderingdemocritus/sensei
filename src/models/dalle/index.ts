@@ -9,7 +9,7 @@ export async function generateImage(prompt: string, retries = 1) {
         const image = await openai.images.generate({
           model: "dall-e-3",
           prompt:
-            "make a dark souls esk image from this story, pixel art, dark and grity style images, story: " +
+            "make a dark souls esk image from this scene, pixel art, dark and grity style images, story: " +
             prompt,
         });
         console.log(image.data);

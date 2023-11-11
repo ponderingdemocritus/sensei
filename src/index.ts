@@ -30,4 +30,4 @@ setInterval(deathPolling, POLL_INTERVAL);
 
 setInterval(getAlive, POLL_INTERVAL * 3);
 
-setInterval(getTopAdventurers, POLL_INTERVAL * 3);
+// setInterval(getTopAdventurers, POLL_INTERVAL * 3);
