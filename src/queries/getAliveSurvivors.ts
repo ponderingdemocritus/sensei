@@ -3,7 +3,7 @@ import { client } from "../index.js";
 
 export const getAlive = async () => {
   try {
-    const { data } = await sdk.getTopAdventurers();
+    const { data } = await sdk.getAliveAdventurers();
 
     console.log(data);
 
