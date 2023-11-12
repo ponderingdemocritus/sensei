@@ -7,6 +7,7 @@ bun install
 ```
 
 ### Terminal 1 - Serve the bot
+
 ```
 bun run serve
 ```
@@ -18,3 +19,17 @@ bun run build --watch
 ```
 
 Now try running it in your server
+
+### Adding Graphql
+
+We use graphql code generator to generate typescript types for our graphql schema.
+
+Step 1: Add your graphql schema to `src/graphql/schema.graphql`
+
+Then run
+
+```
+bun run codegen
+```
+
+NOTE: There is a ts bug in the schema gen right now, so you will have to remove the errors in the schema by changing them to any.

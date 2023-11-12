@@ -1,12 +1,11 @@
 import { SapphireClient } from "@sapphire/framework";
 import { GatewayIntentBits } from "discord.js";
-import { POLL_INTERVAL, pollGraphQL } from "./queries/index.js";
-import { getDeadSurvivors } from "./queries/query.js";
 import {
-  deathStatement,
-  getRandomStatement,
-} from "./models/statements/index.js";
-import { getAlive, getTopAdventurers } from "./queries/getAliveSurvivors.js";
+  getDeadSurvivors,
+  getTopAdventurers,
+  getAlive,
+} from "./queries/index.js";
+import { POLL_INTERVAL } from "./config.js";
 
 export const client = new SapphireClient({
   intents: [
@@ -23,11 +22,8 @@ await client.login(process.env.DISCORD_TOKEN);
 
 console.log(`Polling GraphQL endpoint every ${POLL_INTERVAL} ms`);
 
-const deathPolling = () =>
-  pollGraphQL({ llmStatement: getRandomStatement(), query: getDeadSurvivors });
-
-setInterval(deathPolling, POLL_INTERVAL);
+setInterval(getDeadSurvivors, POLL_INTERVAL);
 
 setInterval(getAlive, POLL_INTERVAL * 3);
 
-// setInterval(getTopAdventurers, POLL_INTERVAL * 3);
+setInterval(getTopAdventurers, POLL_INTERVAL * 3);

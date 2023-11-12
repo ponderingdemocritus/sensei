@@ -1,5 +1,5 @@
 export const deathStatement = `
-    This is the object of an Adventurer who has just perished in a game called Loot Survivor, where players combat perilous beasts. Take the player's name and craft a one-sentence backstory, infusing it with dark humor in the manner of wise old story teller like Gandalf. Roast them for their ill-fated decisions. Make sure to weave their name contextually into the story.
+    This is the object of an Adventurer who has just perished in a game called Loot Survivor, where players combat perilous beasts. Take the player's name and the beasts that are in the object and craft a one-sentence backstory, infusing it with dark humor and wit in the manner of wise old story teller. Roast them for their ill-fated decisions. Make sure to weave their name contextually into the story. Do not use any copyright material. 
 
     \n {question}
 
