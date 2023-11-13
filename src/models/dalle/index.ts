@@ -9,7 +9,7 @@ export async function generateImage(prompt: string, retries = 1) {
         const image = await openai.images.generate({
           model: "dall-e-3",
           prompt:
-            "turn this into a dark souls themed pixel scene, make the beasts scary, hd: " +
+            "turn this into a dark souls themed pixel scene, make the beasts scary, hd [adjusted for content policy]: " +
             prompt,
         });
         console.log(image.data);

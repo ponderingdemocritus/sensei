@@ -1,8 +1,10 @@
-import { sdk } from "../config.js";
+import { sdk, twitterClient } from "../config.js";
 import { client } from "../index.js";
 import { generateImage } from "../models/dalle/index.js";
 import { getPrediction } from "../models/index.js";
-import { getRandomStatement } from "../models/statements/index.js";
+import { getRandomStatement, summary } from "../models/statements/index.js";
+import fs from "fs";
+import fetch from "node-fetch";
 
 const seenAdventurers = new Set();
 
@@ -29,26 +31,38 @@ export const getDeadSurvivors = async () => {
                   (prediction) => {
                     // generate image
                     generateImage(prediction).then((image: any) => {
-                      const exampleEmbed = {
-                        color: 0x00ff3c,
-                        title:
-                          adventurer.name +
-                          (adventurer.health === 0
-                            ? " has died"
-                            : " has entered the arena"),
-                        url: "https://survivor.realms.world/",
-                        description: prediction,
-                        timestamp: new Date().toISOString(),
-                        image: {
-                          url: image[0].url,
-                        },
-                        footer: {
-                          text: "dedicated to the fallen",
-                        },
-                      };
+                      downloadImage(image[0].url, adventurer.id + ".png").then(
+                        () => {
+                          channel.send({
+                            embeds: [
+                              {
+                                color: 0x00ff3c,
+                                title:
+                                  adventurer.name +
+                                  (adventurer.health === 0
+                                    ? " has died"
+                                    : " has entered the arena"),
+                                url: "https://survivor.realms.world/",
+                                description: prediction,
+                                timestamp: new Date().toISOString(),
+                                image: {
+                                  url: image[0].url,
+                                },
+                                footer: {
+                                  text: "dedicated to the fallen",
+                                },
+                              },
+                            ],
+                          });
 
+                          getPrediction(summary, prediction).then(
+                            (summarised_story: string) => {
+                              tweet(summarised_story, adventurer.id + ".png");
+                            }
+                          );
+                        }
+                      );
                       // send message
-                      channel.send({ embeds: [exampleEmbed] });
                     });
                   }
                 );
@@ -78,4 +92,23 @@ export const getLastActionBeforeDeath = async (id: number) => {
     console.error("Fetching error:", error);
     throw error;
   }
+};
+
+const tweet = async (text: any, imagePath: string) => {
+  twitterClient.v1.uploadMedia(imagePath).then((mediaId) => {
+    twitterClient.v2.tweet(text, {
+      media: {
+        media_ids: [mediaId],
+      },
+    });
+  });
+
+  // await twitterClient.v2.tweet(text);
+  // await twitterClient.v1.uploadMedia(image);
+};
+
+const downloadImage = async (url: string, path: string) => {
+  const response = await fetch(url);
+  const buffer = await response.buffer();
+  fs.writeFileSync(path, buffer);
 };
