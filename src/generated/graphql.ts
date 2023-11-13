@@ -795,7 +795,7 @@ export const GetDeadSurvivorsDocument = gql`
   query getDeadSurvivors {
     adventurers(
       limit: 2
-      where: { health: { eq: 0 } }
+      where: { health: { eq: 0 }, xp: { gt: 40 } }
       orderBy: { timestamp: { desc: true } }
     ) {
       id
