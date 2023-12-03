@@ -27,12 +27,18 @@ export class Ohayo extends Command {
 
     await interaction.deferReply();
 
-    const response = await ragChain.invoke( query );
+    const response = await ragChain.invoke(query);
 
     console.log("response", response);
 
     return interaction.editReply({
-      content: response,
+      embeds: [
+        {
+          title: query || "",
+          description: response,
+          url: "https://book.dojoengine.org",
+        },
+      ],
     });
   }
 }
