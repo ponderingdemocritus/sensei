@@ -1,10 +1,11 @@
 import { Command } from "@sapphire/framework";
-import { getPrediction } from "../models/index.js";
-import { questionStatement } from "../models/statements/index.js";
+// import { getPrediction } from "../models/index.js";
+// import { questionStatement } from "../models/statements/index.js";
+import { questionChain } from "../models/loaders/utils.js";
 
-export class Question extends Command {
+export class Ohayo extends Command {
   public constructor(context: Command.Context, options: Command.Options) {
-    super(context, { ...options, description: "Ask a question to Blobert" });
+    super(context, { ...options, description: "Ask sensei" });
   }
 
   public override registerApplicationCommands(registry: Command.Registry) {
@@ -15,7 +16,7 @@ export class Question extends Command {
         .addStringOption((builder) =>
           builder //
             .setName("question")
-            .setDescription("Ask a question")
+            .setDescription("Ask Sensei a Question")
             .setRequired(true)
         )
     );
@@ -24,14 +25,16 @@ export class Question extends Command {
   public override async chatInputRun(
     interaction: Command.ChatInputCommandInteraction
   ) {
-    const question = interaction.options.getString("question");
+    const query = interaction.options.getString("question");
 
     await interaction.deferReply();
 
-    const response = await getPrediction(questionStatement, question as string);
+    const response = await questionChain.call({ query });
+
+    console.log("response", response);
 
     return interaction.editReply({
-      content: response,
+      content: response.text,
     });
   }
 }
