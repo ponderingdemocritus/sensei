@@ -1,7 +1,5 @@
 import { Command } from "@sapphire/framework";
-// import { getPrediction } from "../models/index.js";
-// import { questionStatement } from "../models/statements/index.js";
-import { questionChain } from "../models/loaders/utils.js";
+import { ragChain } from "../models/loaders/utils.js";
 
 export class Ohayo extends Command {
   public constructor(context: Command.Context, options: Command.Options) {
@@ -29,12 +27,12 @@ export class Ohayo extends Command {
 
     await interaction.deferReply();
 
-    const response = await questionChain.call({ query });
+    const response = await ragChain.invoke({ query });
 
     console.log("response", response);
 
     return interaction.editReply({
-      content: response.text,
+      content: response,
     });
   }
 }

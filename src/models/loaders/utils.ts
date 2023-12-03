@@ -12,6 +12,13 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { VectorDBQAChain } from "langchain/chains";
 import { llm } from "../index.js";
+import { PromptTemplate } from "langchain/prompts";
+import {
+  RunnableSequence,
+  RunnablePassthrough,
+} from "langchain/schema/runnable";
+import { formatDocumentsAsString } from "langchain/util/document";
+import { StringOutputParser } from "langchain/schema/output_parser";
 
 export const pinecone = new Pinecone({
   environment: process.env.PINECONE_ENVIROMENT || "us-central1-gcp",
@@ -81,3 +88,21 @@ export const questionChain = VectorDBQAChain.fromLLM(llm, vectorStore, {
   returnSourceDocuments: true,
 });
 
+
+const retriever = vectorStore.asRetriever();
+
+const prompt =
+  PromptTemplate.fromTemplate(`Answer the question based only on the following context:
+{context}
+
+Question: {question}`);
+
+export const ragChain = RunnableSequence.from([
+  {
+    context: retriever.pipe(formatDocumentsAsString),
+    question: new RunnablePassthrough(),
+  },
+  prompt,
+  llm,
+  new StringOutputParser(),
+]);
