@@ -32,13 +32,7 @@ export class Ohayo extends Command {
     console.log("response", response);
 
     return interaction.editReply({
-      embeds: [
-        {
-          title: query || "",
-          description: response,
-          url: "https://book.dojoengine.org",
-        },
-      ],
+      content: "**" + query + "**: " + response,
     });
   }
 }
