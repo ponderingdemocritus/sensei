@@ -88,11 +88,10 @@ export const questionChain = VectorDBQAChain.fromLLM(llm, vectorStore, {
   returnSourceDocuments: true,
 });
 
-
 const retriever = vectorStore.asRetriever();
 
 const prompt =
-  PromptTemplate.fromTemplate(`Answer the question based only on the following context:
+  PromptTemplate.fromTemplate(`Answer the question based only on the following context and keep the response under 2000 characters:
 {context}
 
 Question: {question}`);
