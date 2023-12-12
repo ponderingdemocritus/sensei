@@ -2,15 +2,16 @@ import OpenAI from "openai";
 
 export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
 
+export const prompt =
+  "create me a image prompt to pass into dalle - make a random image of the words OHAYO in capital letters, you can choose any theme that you want. Only return the prompt.";
+
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {
     const attemptGeneration = async (retryCount: number) => {
       try {
         const image = await openai.images.generate({
           model: "dall-e-3",
-          prompt:
-            "turn this into a dark souls themed pixel scene, make the beasts scary, hd [adjusted for content policy]: " +
-            prompt,
+          prompt,
         });
         console.log(image.data);
         resolve(image.data); // Resolve the promise with the image data.
@@ -27,4 +28,19 @@ export async function generateImage(prompt: string, retries = 1) {
 
     attemptGeneration(retries);
   });
+}
+
+export async function getText() {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4-1106-preview",
+    messages: [
+      {
+        role: "system",
+        content: "You are a helpful assistant respond to the question",
+      },
+      { role: "user", content: prompt },
+    ],
+  });
+
+  return response.choices[0].message.content;
 }
