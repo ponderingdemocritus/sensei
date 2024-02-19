@@ -1,6 +1,11 @@
 import { Command } from "@sapphire/framework";
 import { ragChain } from "../models/loaders/utils.js";
-import { generateImage, getText } from "../models/dalle/index.js";
+import {
+  generateImage,
+  getText,
+  ohioPrompt,
+  prompt,
+} from "../models/dalle/index.js";
 import fs from "fs";
 import fetch from "node-fetch";
 
@@ -39,13 +44,23 @@ export class Ohayo extends Command {
     console.log("response", query);
 
     if (query == "ohayo") {
-      await generateImage((await getText()) || "").then((image: any) => {
+      await generateImage((await getText(prompt)) || "").then((image: any) => {
         downloadImage(image[0].url, "test" + ".png").then(() => {
           return interaction.editReply({
             files: ["test" + ".png"],
           });
         });
       });
+    } else if (query == "ohio") {
+      await generateImage((await getText(ohioPrompt)) || "").then(
+        (image: any) => {
+          downloadImage(image[0].url, "test" + ".png").then(() => {
+            return interaction.editReply({
+              files: ["test" + ".png"],
+            });
+          });
+        }
+      );
     } else {
       const response = await ragChain.invoke(query);
 

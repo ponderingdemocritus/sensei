@@ -5,6 +5,9 @@ export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
 export const prompt =
   "create me a image prompt to pass into dalle - make a random image of the words OHAYO in capital letters, you can choose any theme that you want. Only return the prompt.";
 
+export const ohioPrompt =
+  "create me a image prompt to pass into dalle - make a random image from the american state OHIO, make sure to use culture references, you can choose any theme that you want. Only return the prompt.";
+
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {
     const attemptGeneration = async (retryCount: number) => {
@@ -30,7 +33,7 @@ export async function generateImage(prompt: string, retries = 1) {
   });
 }
 
-export async function getText() {
+export async function getText(prompt: string) {
   const response = await openai.chat.completions.create({
     model: "gpt-4-1106-preview",
     messages: [
