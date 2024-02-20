@@ -6,7 +6,10 @@ export const prompt =
   "create me a image prompt to pass into dalle - make a random image of the words OHAYO in capital letters, you can choose any theme that you want. Only return the prompt.";
 
 export const ohioPrompt =
-  "create me a image prompt to pass into dalle - make a random image from the american state OHIO farmland, you can choose any theme that you want. Only return the prompt.";
+  "create me a image prompt to pass into dalle - make a random image from the american state OHIO farmland and OHIO in capital letters, you can choose any theme that you want. Only return the prompt.";
+
+export const katanaPrompt =
+  "create me a image prompt to pass into dalle - make a random image of a katana, you can choose any theme that you want. Only return the prompt.";
 
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {

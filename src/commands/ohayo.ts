@@ -3,6 +3,7 @@ import { ragChain } from "../models/loaders/utils.js";
 import {
   generateImage,
   getText,
+  katanaPrompt,
   ohioPrompt,
   prompt,
 } from "../models/dalle/index.js";
@@ -53,6 +54,16 @@ export class Ohayo extends Command {
       });
     } else if (query == "ohio") {
       await generateImage((await getText(ohioPrompt)) || "").then(
+        (image: any) => {
+          downloadImage(image[0].url, "test" + ".png").then(() => {
+            return interaction.editReply({
+              files: ["test" + ".png"],
+            });
+          });
+        }
+      );
+    } else if (query == "ohio") {
+      await generateImage((await getText(katanaPrompt)) || "").then(
         (image: any) => {
           downloadImage(image[0].url, "test" + ".png").then(() => {
             return interaction.editReply({
