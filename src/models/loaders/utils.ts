@@ -11,17 +11,13 @@ import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
 import { VectorDBQAChain } from "langchain/chains";
-import { llm } from "../index.js";
-import { PromptTemplate } from "langchain/prompts";
-import {
-  RunnableSequence,
-  RunnablePassthrough,
-} from "langchain/schema/runnable";
-import { formatDocumentsAsString } from "langchain/util/document";
+import { llm, chatModel } from "../index.js";
+import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { StringOutputParser } from "langchain/schema/output_parser";
+import { pull } from "langchain/hub";
 
 export const pinecone = new Pinecone({
-  environment: process.env.PINECONE_ENVIROMENT || "us-central1-gcp",
   apiKey: process.env.PINECONE_API_KEY || "",
 });
 
@@ -37,7 +33,10 @@ export const embed = async (docs: any) => {
 
     await PineconeStore.fromDocuments(
       docs,
-      new OpenAIEmbeddings({ openAIApiKey: OPEN_AI_API_KEY }),
+      new OpenAIEmbeddings({
+        openAIApiKey: OPEN_AI_API_KEY,
+        modelName: "text-embedding-3-large",
+      }),
       {
         pineconeIndex,
         namespace: PINECONE_NAMESPACE,
@@ -65,7 +64,7 @@ export const processDocuments = async (dirPath: string) => {
 
     /* Split text into chunks */
     const textSplitter = new RecursiveCharacterTextSplitter({
-      chunkSize: 1000,
+      chunkSize: 600,
       chunkOverlap: 200,
     });
 
@@ -79,7 +78,10 @@ export const processDocuments = async (dirPath: string) => {
 };
 
 export const vectorStore = await PineconeStore.fromExistingIndex(
-  new OpenAIEmbeddings({ openAIApiKey: OPEN_AI_API_KEY }),
+  new OpenAIEmbeddings({
+    openAIApiKey: OPEN_AI_API_KEY,
+    modelName: "text-embedding-3-large",
+  }),
   { pineconeIndex, namespace: PINECONE_NAMESPACE }
 );
 
@@ -90,18 +92,35 @@ export const questionChain = VectorDBQAChain.fromLLM(llm, vectorStore, {
 
 const retriever = vectorStore.asRetriever();
 
-const prompt =
-  PromptTemplate.fromTemplate(`Answer the question based only on the following context and keep the response under 2000 characters:
-{context}
+// const prompt =
+//   PromptTemplate.fromTemplate(`Answer the question based only on the following context and keep the response under 2000 characters:
+// {context}
 
-Question: {question}`);
+// Question: {question}`);
 
-export const ragChain = RunnableSequence.from([
-  {
-    context: retriever.pipe(formatDocumentsAsString),
-    question: new RunnablePassthrough(),
-  },
-  prompt,
-  llm,
-  new StringOutputParser(),
-]);
+// export const ragChain = RunnableSequence.from([
+//   {
+//     context: retriever.pipe(formatDocumentsAsString),
+//     question: new RunnablePassthrough(),
+//   },
+//   prompt,
+//   llm,
+//   new StringOutputParser(),
+// ]);
+
+export const ragChain = async (question: string) => {
+  const prompt = await pull<ChatPromptTemplate>("rlm/rag-prompt");
+
+  const ragChain = await createStuffDocumentsChain({
+    llm: chatModel,
+    prompt,
+    outputParser: new StringOutputParser(),
+  });
+
+  const retrievedDocs = await retriever.getRelevantDocuments(question);
+
+  return await ragChain.invoke({
+    question: question,
+    context: retrievedDocs,
+  });
+};

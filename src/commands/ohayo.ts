@@ -73,7 +73,7 @@ export class Ohayo extends Command {
         }
       );
     } else {
-      const response = await ragChain.invoke(query);
+      const response = await ragChain(query || "");
 
       return interaction.editReply({
         content: "**" + query + "**: " + response,
