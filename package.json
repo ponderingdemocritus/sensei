@@ -14,16 +14,21 @@
   },
   "dependencies": {
     "@langchain/anthropic": "^0.1.9",
+    "@langchain/pinecone": "^0.0.4",
     "@pinecone-database/pinecone": "^2.2.0",
     "@sapphire/decorators": "^6.0.2",
     "@sapphire/framework": "^4.6.0",
+    "@types/node-fetch": "^2.6.11",
+    "@types/ws": "^8.5.10",
     "discord.js": "^14.13.0",
     "express": "^4.18.2",
-    "langchain": "^0.1.30",
+    "langchain": "^0.1.33",
     "node-cron": "^3.0.2",
+    "node-fetch": "^3.3.2",
     "openai": "^4.20.1",
     "twitter-api-v2": "^1.15.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "ws": "^8.16.0"
   },
   "scripts": {
     "build": "tsc",

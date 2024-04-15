@@ -9,14 +9,13 @@ import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { TextLoader } from "langchain/document_loaders/fs/text";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { PineconeStore } from "langchain/vectorstores/pinecone";
-import { VectorDBQAChain } from "langchain/chains";
-import { llm, chatModel } from "../index.js";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { PineconeStore } from "@langchain/pinecone";
+import { chatModel } from "../index.js";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
 import { StringOutputParser } from "langchain/schema/output_parser";
-import { pull } from "langchain/hub";
-
+import { createRetrievalChain } from "langchain/chains/retrieval";
+import { ChatPromptTemplate } from "langchain/prompts";
+import { Document } from "langchain/document";
 export const pinecone = new Pinecone({
   apiKey: process.env.PINECONE_API_KEY || "",
 });
@@ -85,42 +84,43 @@ export const vectorStore = await PineconeStore.fromExistingIndex(
   { pineconeIndex, namespace: PINECONE_NAMESPACE }
 );
 
-export const questionChain = VectorDBQAChain.fromLLM(llm, vectorStore, {
-  k: 1,
-  returnSourceDocuments: true,
+const prompt =
+  ChatPromptTemplate.fromTemplate(`Answer the following question based only on the provided context:
+
+<context>
+{context}
+</context>
+
+Question: {input}`);
+
+const combineDocsChain = await createStuffDocumentsChain({
+  llm: chatModel,
+  prompt,
+  outputParser: new StringOutputParser(),
 });
 
 const retriever = vectorStore.asRetriever();
 
-// const prompt =
-//   PromptTemplate.fromTemplate(`Answer the question based only on the following context and keep the response under 2000 characters:
-// {context}
+// TODO: Generalise this
+const retrievalChain = await createRetrievalChain({
+  retriever,
+  combineDocsChain,
+});
 
-// Question: {question}`);
-
-// export const ragChain = RunnableSequence.from([
-//   {
-//     context: retriever.pipe(formatDocumentsAsString),
-//     question: new RunnablePassthrough(),
-//   },
-//   prompt,
-//   llm,
-//   new StringOutputParser(),
-// ]);
-
-export const ragChain = async (question: string) => {
-  const prompt = await pull<ChatPromptTemplate>("rlm/rag-prompt");
-
-  const ragChain = await createStuffDocumentsChain({
-    llm: chatModel,
-    prompt,
-    outputParser: new StringOutputParser(),
-  });
-
+export const ragChain = async (
+  question: string
+): Promise<
+  {
+    context: Document<Record<string, any>>[];
+    answer: string;
+  } & {
+    [key: string]: unknown;
+  }
+> => {
   const retrievedDocs = await retriever.getRelevantDocuments(question);
 
-  return await ragChain.invoke({
-    question: question,
+  return await retrievalChain.invoke({
+    input: question,
     context: retrievedDocs,
   });
 };
