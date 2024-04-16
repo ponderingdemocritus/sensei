@@ -20,10 +20,10 @@ await client.login(process.env.DISCORD_TOKEN);
 const app = express();
 app.use(cors());
 const server = http.createServer(app);
-const PORT = 3000;
+const port = process.env.PORT || 3000;
 
 setupWebSocketServer(server);
 
-server.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+server.listen(port, () => {
+  console.log(`Server running on http://0.0.0.0:${port}`);
 });
