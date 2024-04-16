@@ -3,7 +3,7 @@ import { GatewayIntentBits } from "discord.js";
 import express from "express";
 import http from "http";
 import { setupWebSocketServer } from "./stream/index.js";
-
+import cors from "cors";
 export const client = new SapphireClient({
   intents: [
     GatewayIntentBits.MessageContent,
@@ -18,6 +18,7 @@ console.log("Logging in.....");
 await client.login(process.env.DISCORD_TOKEN);
 
 const app = express();
+app.use(cors());
 const server = http.createServer(app);
 const PORT = 3000;
 

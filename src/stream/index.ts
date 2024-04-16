@@ -8,7 +8,14 @@ import { ChatPromptTemplate } from "langchain/prompts";
 import http from "http";
 
 export function setupWebSocketServer(server: http.Server) {
-  const wss = new WebSocketServer({ server, path: "/ws" });
+  const wss = new WebSocketServer({
+    server,
+    path: "/ws",
+    verifyClient: ({ origin }, callback) => {
+      // Allow all origins
+      callback(true);
+    },
+  });
 
   wss.on("connection", (ws: any) => {
     ws.on("message", async (message: string) => {
