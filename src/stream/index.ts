@@ -11,6 +11,7 @@ export function setupWebSocketServer(server: http.Server) {
   const wss = new WebSocketServer({
     server,
     path: "/ws",
+    port: Number(process.env.PORT),
     verifyClient: ({ origin }, callback) => {
       // Allow all origins
       callback(true);
