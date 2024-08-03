@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "serve": "tsc && node dist/src/index.js",
+    "serve": "node dist/src/index.js",
     "codegen": "graphql-codegen"
   }
 }
