@@ -1,5 +1,3 @@
-import { TwitterApi } from "twitter-api-v2";
-
 if (!process.env.TWITTER_ACCESS_TOKEN) {
   throw new Error("TWITTER_BEARER_TOKEN is not defined");
 }

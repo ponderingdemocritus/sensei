@@ -1,5 +1,4 @@
 import { Command } from "@sapphire/framework";
-// import { ragChain } from "../models/loaders/utils.js";
 import {
   generateImage,
   getText,
@@ -109,8 +108,6 @@ export class Ohayo extends Command {
         });
       }
     } else {
-      // const response = await ragChain.invoke(query);
-
       return interaction.editReply({
         content: await getText(haiku),
       });
