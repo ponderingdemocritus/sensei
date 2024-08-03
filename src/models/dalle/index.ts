@@ -1,11 +1,16 @@
 import Anthropic from "@anthropic-ai/sdk";
 // import OpenAI from "openai";
+import * as fal from "@fal-ai/serverless-client";
 
 import Replicate from "replicate";
 export const replicate = new Replicate();
 
 export const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+fal.config({
+  credentials: process.env.FAL_KEY,
 });
 
 // export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
@@ -29,11 +34,18 @@ export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {
     const attemptGeneration = async (retryCount: number) => {
       try {
-        const image = await replicate.run("black-forest-labs/flux-pro", {
-          input: { prompt },
+        const image = await fal.subscribe("fal-ai/flux-pro", {
+          input: {
+            prompt,
+          },
+          logs: true,
+          onQueueUpdate: (update) => {
+            if (update.status === "IN_PROGRESS") {
+            }
+          },
         });
         console.log(image);
-        resolve(image); // Resolve the promise with the image data.
+        resolve((image as any)?.images?.[0]?.url); // Resolve the promise with the image data, using type assertion and optional chaining.
       } catch (error: any) {
         console.error(error);
         if (error.message.includes("Rate limit exceeded") && retryCount > 0) {

@@ -34,7 +34,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "serve": "node dist/src/index.js",
+    "serve": "bun --env-file=.env dist/src/index.js",
     "codegen": "graphql-codegen"
   }
 }
