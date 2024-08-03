@@ -1,11 +1,13 @@
 import { Command } from "@sapphire/framework";
-import { ragChain } from "../models/loaders/utils.js";
+// import { ragChain } from "../models/loaders/utils.js";
 import {
   generateImage,
   getText,
   katanaPrompt,
   ohioPrompt,
   prompt,
+  ohayooo,
+  haiku,
 } from "../models/dalle/index.js";
 import fs from "fs";
 import fetch from "node-fetch";
@@ -43,40 +45,74 @@ export class Ohayo extends Command {
     await interaction.deferReply();
 
     console.log("response", query);
-
     if (query == "ohayo") {
-      await generateImage((await getText(prompt)) || "").then((image: any) => {
-        downloadImage(image[0].url, "test" + ".png").then(() => {
-          return interaction.editReply({
-            files: ["test" + ".png"],
+      const textPrompt = await getText(prompt);
+
+      console.log(textPrompt);
+      if (typeof textPrompt === "string") {
+        await generateImage(textPrompt).then((image: any) => {
+          console.log("image", image);
+          downloadImage(image, "test" + ".png").then(() => {
+            return interaction.editReply({
+              files: ["test" + ".png"],
+            });
           });
         });
-      });
-    } else if (query == "ohio") {
-      await generateImage((await getText(ohioPrompt)) || "").then(
-        (image: any) => {
-          downloadImage(image[0].url, "test" + ".png").then(() => {
+      } else {
+        return interaction.editReply({
+          content: "Failed to generate image prompt.",
+        });
+      }
+    } else if (query === "ohio") {
+      const ohioText = await getText(ohioPrompt);
+      if (typeof ohioText === "string") {
+        await generateImage(ohioText).then((image: any) => {
+          downloadImage(image, "test.png").then(() => {
             return interaction.editReply({
-              files: ["test" + ".png"],
+              files: ["test.png"],
             });
           });
-        }
-      );
-    } else if (query == "ohio") {
-      await generateImage((await getText(katanaPrompt)) || "").then(
-        (image: any) => {
-          downloadImage(image[0].url, "test" + ".png").then(() => {
+        });
+      } else {
+        return interaction.editReply({
+          content: "Failed to generate image prompt for Ohio.",
+        });
+      }
+    } else if (query === "katana") {
+      const katanaText = await getText(katanaPrompt);
+      if (typeof katanaText === "string") {
+        await generateImage(katanaText).then((image: any) => {
+          downloadImage(image, "test.png").then(() => {
             return interaction.editReply({
-              files: ["test" + ".png"],
+              files: ["test.png"],
             });
           });
-        }
-      );
+        });
+      } else {
+        return interaction.editReply({
+          content: "Failed to generate image prompt for Katana.",
+        });
+      }
+    } else if (query === "ninja") {
+      const ohayooText = await getText(ohayooo);
+      if (typeof ohayooText === "string") {
+        await generateImage(ohayooText).then((image: any) => {
+          downloadImage(image, "test.png").then(() => {
+            return interaction.editReply({
+              files: ["test.png"],
+            });
+          });
+        });
+      } else {
+        return interaction.editReply({
+          content: "Failed to generate image prompt for Ohayoo.",
+        });
+      }
     } else {
-      const response = await ragChain.invoke(query);
+      // const response = await ragChain.invoke(query);
 
       return interaction.editReply({
-        content: "**" + query + "**: " + response,
+        content: await getText(haiku),
       });
     }
   }

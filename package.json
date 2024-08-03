@@ -13,7 +13,8 @@
     "bun-types": "latest"
   },
   "dependencies": {
-    "@pinecone-database/pinecone": "^1.1.2",
+    "@anthropic-ai/sdk": "^0.25.0",
+    "@pinecone-database/pinecone": "^3.0.0",
     "@sapphire/decorators": "^6.0.2",
     "@sapphire/framework": "^4.6.0",
     "discord.js": "^14.13.0",
@@ -21,12 +22,13 @@
     "langchain": "^0.0.200",
     "node-cron": "^3.0.2",
     "openai": "^4.20.1",
+    "replicate": "^0.32.0",
     "twitter-api-v2": "^1.15.2",
     "typescript": "^5.2.2"
   },
   "scripts": {
     "build": "tsc",
-    "serve": "node dist/src/index.js",
+    "serve": "tsc && node --env-file=.env dist/src/index.js",
     "codegen": "graphql-codegen"
   }
 }

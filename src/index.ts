@@ -13,4 +13,3 @@ export const client = new SapphireClient({
 console.log("Logging in.....");
 
 await client.login(process.env.DISCORD_TOKEN);
-

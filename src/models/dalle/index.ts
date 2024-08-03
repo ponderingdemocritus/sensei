@@ -1,9 +1,20 @@
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
+// import OpenAI from "openai";
 
-export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
+import Replicate from "replicate";
+export const replicate = new Replicate();
+
+export const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY,
+});
+
+// export const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
 
 export const prompt =
   "create me a image prompt to pass into dalle - make a random image of the words OHAYO in capital letters, you can choose any theme that you want. Only return the prompt.";
+
+export const ohayooo =
+  "create me a image prompt to pass into dalle - make a random image of the words OHAYO in capital letters incorportating a Chibi ninja with red cape and hood, you can choose any theme that you want. Only return the prompt.";
 
 export const ohioPrompt =
   "create me a image prompt to pass into dalle - make a random image from the american state OHIO farmland and OHIO in capital letters, you can choose any theme that you want. Only return the prompt.";
@@ -11,16 +22,18 @@ export const ohioPrompt =
 export const katanaPrompt =
   "create me a image prompt to pass into dalle - make a random image of a katana, you can choose any theme that you want. Only return the prompt.";
 
+export const haiku =
+  "create me a japanese haiku about sensei, learning and wisdom.";
+
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {
     const attemptGeneration = async (retryCount: number) => {
       try {
-        const image = await openai.images.generate({
-          model: "dall-e-3",
-          prompt,
+        const image = await replicate.run("black-forest-labs/flux-pro", {
+          input: { prompt },
         });
-        console.log(image.data);
-        resolve(image.data); // Resolve the promise with the image data.
+        console.log(image);
+        resolve(image); // Resolve the promise with the image data.
       } catch (error: any) {
         console.error(error);
         if (error.message.includes("Rate limit exceeded") && retryCount > 0) {
@@ -37,16 +50,25 @@ export async function generateImage(prompt: string, retries = 1) {
 }
 
 export async function getText(prompt: string) {
-  const response = await openai.chat.completions.create({
-    model: "gpt-4-1106-preview",
+  const response = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20240620",
+    max_tokens: 1000,
+    temperature: 0,
+    system: "You are a helpful assistant, answer the question.",
     messages: [
       {
-        role: "system",
-        content: "You are a helpful assistant respond to the question",
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: prompt,
+          },
+        ],
       },
-      { role: "user", content: prompt },
     ],
   });
 
-  return response.choices[0].message.content;
+  return response.content[0].type === "text"
+    ? response.content[0].text
+    : "Non-text content";
 }
