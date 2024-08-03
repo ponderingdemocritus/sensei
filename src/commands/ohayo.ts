@@ -44,28 +44,34 @@ export class Ohayo extends Command {
     await interaction.deferReply();
 
     console.log("response", query);
-    if (query == "ohayo") {
-      const textPrompt = await getText(prompt);
+    if (
+      query === "ohayo" ||
+      query === "ohio" ||
+      query === "katana" ||
+      query === "ninja"
+    ) {
+      let promptType;
+      switch (query) {
+        case "ohayo":
+          promptType = prompt;
+          break;
+        case "ohio":
+          promptType = ohioPrompt;
+          break;
+        case "katana":
+          promptType = katanaPrompt;
+          break;
+        case "ninja":
+          promptType = ohayooo;
+          break;
+      }
+
+      const textPrompt = await getText(promptType);
 
       console.log(textPrompt);
       if (typeof textPrompt === "string") {
         await generateImage(textPrompt).then((image: any) => {
           console.log("image", image);
-          downloadImage(image, "test" + ".png").then(() => {
-            return interaction.editReply({
-              files: ["test" + ".png"],
-            });
-          });
-        });
-      } else {
-        return interaction.editReply({
-          content: "Failed to generate image prompt.",
-        });
-      }
-    } else if (query === "ohio") {
-      const ohioText = await getText(ohioPrompt);
-      if (typeof ohioText === "string") {
-        await generateImage(ohioText).then((image: any) => {
           downloadImage(image, "test.png").then(() => {
             return interaction.editReply({
               files: ["test.png"],
@@ -74,37 +80,7 @@ export class Ohayo extends Command {
         });
       } else {
         return interaction.editReply({
-          content: "Failed to generate image prompt for Ohio.",
-        });
-      }
-    } else if (query === "katana") {
-      const katanaText = await getText(katanaPrompt);
-      if (typeof katanaText === "string") {
-        await generateImage(katanaText).then((image: any) => {
-          downloadImage(image, "test.png").then(() => {
-            return interaction.editReply({
-              files: ["test.png"],
-            });
-          });
-        });
-      } else {
-        return interaction.editReply({
-          content: "Failed to generate image prompt for Katana.",
-        });
-      }
-    } else if (query === "ninja") {
-      const ohayooText = await getText(ohayooo);
-      if (typeof ohayooText === "string") {
-        await generateImage(ohayooText).then((image: any) => {
-          downloadImage(image, "test.png").then(() => {
-            return interaction.editReply({
-              files: ["test.png"],
-            });
-          });
-        });
-      } else {
-        return interaction.editReply({
-          content: "Failed to generate image prompt for Ohayoo.",
+          content: `Failed to generate image prompt for ${query}.`,
         });
       }
     } else {
