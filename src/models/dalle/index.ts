@@ -28,7 +28,10 @@ export const katanaPrompt =
   "create me a image prompt to pass into dalle - make a random image of a katana, you can choose any theme that you want. Only return the prompt.";
 
 export const haiku =
-  "create me a japanese haiku about sensei, learning and wisdom.";
+  "create me a japanese haiku about sensei, learning and wisdom. Only return the poem.";
+
+export const nyc =
+  "create me a image prompt to pass into dalle - make a random image of the New York City skyline which includes the words OHAYO, you can choose any theme that you want. Only return the prompt.";
 
 export async function generateImage(prompt: string, retries = 1) {
   return new Promise((resolve, reject) => {

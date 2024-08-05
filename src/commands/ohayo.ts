@@ -7,6 +7,7 @@ import {
   prompt,
   ohayooo,
   haiku,
+  nyc,
 } from "../models/dalle/index.js";
 import fs from "fs";
 import fetch from "node-fetch";
@@ -48,7 +49,8 @@ export class Ohayo extends Command {
       query === "ohayo" ||
       query === "ohio" ||
       query === "katana" ||
-      query === "ninja"
+      query === "ninja" ||
+      query === "nyc"
     ) {
       let promptType;
       switch (query) {
@@ -63,6 +65,9 @@ export class Ohayo extends Command {
           break;
         case "ninja":
           promptType = ohayooo;
+          break;
+        case "nyc":
+          promptType = nyc;
           break;
       }
 
